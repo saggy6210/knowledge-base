@@ -1,0 +1,10 @@
+image: base_image
+
+create_image_publish:
+  stage: build
+  script:
+    - docker login -u "DOCKER_HUB_USER" -p "DOCKERHUB_TOCKEN" "DOCKERHUB_REGISTRY"
+    - docker build -t dotnet:latest .
+    - docker push dotnet:latest
+  only: 
+  - master

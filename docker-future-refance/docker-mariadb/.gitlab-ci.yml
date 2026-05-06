@@ -1,0 +1,13 @@
+image: Docker_image
+
+before_script:
+    - docker login -u "DOCKERHUB_USER_ID" -p "DOCKERHUB_TOCKEN" "DOCKER_REGISTRY"
+    
+create_image_publish:
+  stage: build
+  script:
+    - docker build --no-cache -t mariadb:latest .
+    - docker push mariadb:latest
+  only: 
+  - master
+  
