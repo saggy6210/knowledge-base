@@ -15,6 +15,7 @@ A comprehensive collection of DevOps documentation covering containerization, or
 - [Build Tools](#build-tools)
 - [Linux Administration](#linux-administration)
 - [Reference Guides](#reference-guides)
+- [Projects](#projects)
 
 ---
 
@@ -22,8 +23,10 @@ A comprehensive collection of DevOps documentation covering containerization, or
 
 | Document | Description |
 |----------|-------------|
+| [Docker Basics](docker_basics.md) | Docker fundamentals, proxy configuration, and common commands |
 | [Docker Networking Commands](docker_networking_commands.md) | Docker container operations, networking, and interview Q&A |
 | [Docker Registry Push](docker_registry_push.md) | Building and pushing images to private registries |
+| [Dockerfile for Redis](Dockerfile-For-Redis) | Sample Dockerfile for Redis container |
 
 ---
 
@@ -97,13 +100,23 @@ A comprehensive collection of DevOps documentation covering containerization, or
 
 ---
 
+## Projects
+
+| Project | Description |
+|---------|-------------|
+| [CI/CD Runner Base Image](cicd-runner-base-image/) | Docker base image with Java, Git, Azure CLI, Terraform, and Python for CI/CD pipelines |
+| [Grafana Elasticsearch Monitoring](grafana-elasticsearch-monitoring/) | Docker-based monitoring stack using Elasticsearch and Grafana with system metrics collection |
+
+---
+
 ## Quick Links
 
 ### Getting Started
 
-1. **Containerization:** Start with [Docker Networking Commands](docker_networking_commands.md)
+1. **Containerization:** Start with [Docker Basics](docker_basics.md) and [Docker Networking Commands](docker_networking_commands.md)
 2. **Orchestration:** Move to [Kubernetes CentOS 7 Install](kubernetes_centos7_install.md)
 3. **CI/CD:** Set up pipelines with [CI/CD Setup Notes](cicd_setup_notes.md)
+4. **Monitoring:** Explore the [Grafana Elasticsearch Monitoring](grafana-elasticsearch-monitoring/) project
 
 ### External Resources
 
