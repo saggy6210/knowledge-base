@@ -1,93 +1,202 @@
-##### An image is a lightweight, stand-alone, executable package that includes everything needed to run a piece of software, including the code, a runtime, libraries, environment variables, and config files.
-##### A container is a runtime instance of an image
-##### A docker-compose.yml file is a YAML file that defines how Docker containers should behave in production.
-##### Multi-container, multi-machine applications are made possible by joining multiple machines into a “Dockerized” cluster called a swarm.
+# Docker Basics
 
-## Docker image with java git azurecli terrafrom and python installed
+A comprehensive guide to Docker fundamentals, concepts, and commonly used commands.
 
-`docker pull sagar6210/base-java-git-azurecli-terraform-python`
+## Table of Contents
 
-> How to install Docker?
+- [Core Concepts](#core-concepts)
+- [Installation](#installation)
+- [Proxy Configuration](#proxy-configuration)
+- [Basic Commands](#basic-commands)
+- [Image Management](#image-management)
+- [Container Management](#container-management)
+- [Building Images](#building-images)
+- [Docker Hub Operations](#docker-hub-operations)
 
-https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-16-04
+---
 
-## Docker proxy configuration
+## Core Concepts
 
-*Create http-proxy.conf and put the entry of http_proxy and no_proxy.
-/etc/systemd/system/docker.service.d/http-proxy.conf
+| Concept | Description |
+|---------|-------------|
+| **Image** | A lightweight, stand-alone, executable package that includes everything needed to run software: code, runtime, libraries, environment variables, and config files |
+| **Container** | A runtime instance of an image |
+| **Docker Compose** | A YAML file that defines how Docker containers should behave in production |
+| **Docker Swarm** | Multi-container, multi-machine applications made possible by joining multiple machines into a "Dockerized" cluster |
 
+## Installation
+
+> **Reference:** [DigitalOcean Docker Installation Guide](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-16-04)
+
+### Pre-built Image with DevOps Tools
+
+Pull an image with Java, Git, Azure CLI, Terraform, and Python pre-installed:
+
+```bash
+docker pull sagar6210/base-java-git-azurecli-terraform-python
+```
+
+## Proxy Configuration
+
+If you're behind a corporate proxy, configure Docker to use it.
+
+### HTTP Proxy Configuration
+
+Create `/etc/systemd/system/docker.service.d/http-proxy.conf`:
+
+```ini
 [Service]
 Environment="HTTP_PROXY=http://proxy-ip:port/" "NO_PROXY=<HOST_IP>"
+```
 
-/etc/systemd/system/docker.service.d/https-proxy.conf
+### HTTPS Proxy Configuration
+
+Create `/etc/systemd/system/docker.service.d/https-proxy.conf`:
+
+```ini
 [Service]
 Environment="HTTPS_PROXY=http://proxy-ip:port/"
+```
 
-## Basic Docker commands
-> Get Docker version
-`docker version`
+### Apply Configuration
 
-> Get Docker information with number of images, Running container, CPU, memory, etc.
-`docker info`
+```bash
+systemctl daemon-reload
+sudo service docker restart
+```
 
-> List of Docker images
-`docker images`
+---
 
-> To list all running and stopped containers
-`docker ps -a`
+## Basic Commands
 
-> To list all running containers
-`docker ps -a -f status=running`
+### System Information
 
-> To list all running and stopped containers, showing only their container id
-`docker ps -aq`
+| Command | Description |
+|---------|-------------|
+| `docker version` | Get Docker version |
+| `docker info` | Get Docker information (images, containers, CPU, memory, etc.) |
+| `docker system df` | Show Docker disk usage |
 
-> To delete all containers
-`docker rm $(docker ps -a -q)`
+### Cleanup Commands
 
-> To delete all images
-`docker rmi $(docker images -q)`
+| Command | Description |
+|---------|-------------|
+| `docker system prune` | Remove unused containers, images, and networks |
+| `docker system prune -a --volumes` | Remove all unused data including volumes |
 
-> Show docker disk usage 
-`docker system df -kh`
+---
 
-> Remove unused container, images, network
-`docker system prune`
+## Image Management
 
-> To remove docker volume
-`docker system prune -a --volumes`
+### Listing Images
 
-> To build docker image
-`docker build -t imagename:tag .`
+```bash
+docker images
+```
 
-> To run docker image
-`docker run -t imagename:tag`
+### Deleting Images
 
-> To run docker image on port with deamon 
-`docker run -d -p 4000:80 imagename:tag`
+```bash
+# Delete all images
+docker rmi $(docker images -q)
+```
 
-> To tag docker image
-`docker tag imagename username/identified-image-name:tag`
+### Building Images
 
-> To stop docker container 
-`docker container stop container_id`
+```bash
+docker build -t imagename:tag .
+```
 
-> to push docker image to container hub
-* first tag docker image and then push to docker hub
-`docker login`
-`docker tag image username/repository:tag`
-`docker push username/repository:tag`
+### Tagging Images
 
-> To pull docker image from docker registry 
-`docker pull username/dockerimage:tag`
+```bash
+docker tag imagename username/repository:tag
+```
 
-## Docker build image
-Create docker files with centos base image
-Install java, git, azure-cli, python and terraform on that image
+---
 
-*If you are working behind proxy run docker image with argument. Use below command to run docker with arguments 
-Run below command from where you kept dokcer file.
+## Container Management
 
-`docker build --build-arg no_proxy_ip=<NO_PROXY> --build-arg proxy_ip=<HTTP_PROXY_IP> -t localhost:5000/azure-java:1.5 .`
+### Listing Containers
 
-Here, <NO_PROXY> is ip address of your machine and <HTTP_PROXY_IP> is ip address of your proxy server.
+| Command | Description |
+|---------|-------------|
+| `docker ps -a` | List all running and stopped containers |
+| `docker ps -a -f status=running` | List only running containers |
+| `docker ps -aq` | List container IDs only |
+
+### Running Containers
+
+```bash
+# Run container
+docker run -t imagename:tag
+
+# Run container in detached mode with port mapping
+docker run -d -p 4000:80 imagename:tag
+```
+
+### Stopping and Removing Containers
+
+```bash
+# Stop container
+docker container stop container_id
+
+# Delete all containers
+docker rm $(docker ps -a -q)
+```
+
+---
+
+## Building Images
+
+### Basic Build
+
+```bash
+docker build -t imagename:tag .
+```
+
+### Build with Proxy Arguments
+
+When working behind a proxy, pass build arguments:
+
+```bash
+docker build \
+  --build-arg no_proxy_ip=<NO_PROXY> \
+  --build-arg proxy_ip=<HTTP_PROXY_IP> \
+  -t localhost:5000/azure-java:1.5 .
+```
+
+**Parameters:**
+- `<NO_PROXY>` - IP address of your machine
+- `<HTTP_PROXY_IP>` - IP address of your proxy server
+
+---
+
+## Docker Hub Operations
+
+### Login and Push
+
+```bash
+# Login to Docker Hub
+docker login
+
+# Tag the image
+docker tag image username/repository:tag
+
+# Push to Docker Hub
+docker push username/repository:tag
+```
+
+### Pull from Registry
+
+```bash
+docker pull username/dockerimage:tag
+```
+
+---
+
+## Related Documentation
+
+- [Docker Networking Commands](docker_networking_commands.md)
+- [Docker Registry Push](docker_registry_push.md)
+- [CI/CD Runner Base Image](cicd-runner-base-image/)
